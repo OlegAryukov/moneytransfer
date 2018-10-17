@@ -1,0 +1,19 @@
+# Idea files.
+.idea/**
+!.idea/runConfigurations/
+*.iml
+
+# Compiled class file.
+target/
+*.class
+
+# Log file.
+*.log
+
+# Package Files.
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
