@@ -11,6 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.Table;
 import java.time.Instant;
 import java.util.UUID;
@@ -22,6 +23,7 @@ import java.util.UUID;
 @Table(name = "operation_history")
 public class OperationHistory {
 
+    @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(
             name = "UUID",

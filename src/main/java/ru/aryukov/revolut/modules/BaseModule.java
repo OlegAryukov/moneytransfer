@@ -15,7 +15,7 @@ import javax.persistence.Persistence;
 public class BaseModule extends AbstractModule {
     @Override
     protected void configure() {
-        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("TransferPersistence");
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("ru.aryukov.revolut.model.User");
         bind(EntityManagerFactory.class).toInstance(entityManagerFactory);
         bind(EntityManager.class).toInstance(entityManagerFactory.createEntityManager());
 

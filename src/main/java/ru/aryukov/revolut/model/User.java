@@ -16,7 +16,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @Entity
-@Table(name = "user")
+@Table(name = "user", schema = "FUCK")
 public class User {
 
     @Id
