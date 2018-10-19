@@ -20,7 +20,7 @@ import java.math.BigDecimal;
 @Getter
 @NoArgsConstructor
 @Entity
-@Table(name = "bank_account")
+@Table(name = "bank_account", schema = "dbtest")
 public class BankAccount {
 
     @Id
