@@ -7,4 +7,6 @@ public class UserController {
 
     @Inject
     UserService userService;
+
+
 }

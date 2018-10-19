@@ -9,3 +9,6 @@ ALTER TABLE dbtest.bank_account ADD bank_account_id INTEGER;
 ALTER TABLE dbtest.bank_account ADD amount DECIMAL(10, 2);
 ALTER TABLE dbtest.bank_account ADD currency_type VARCHAR2(3);
 ALTER TABLE dbtest.bank_account ADD user_if INTEGER;
+
+CREATE TABLE dbtest.operation_history;
+ALTER TABLE dbtest.operation_history
