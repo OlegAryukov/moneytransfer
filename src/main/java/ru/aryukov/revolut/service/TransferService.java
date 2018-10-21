@@ -1,18 +1,13 @@
 package ru.aryukov.revolut.service;
 
-import com.google.inject.Inject;
+/**
+ * Created by oaryukov on 20.10.2018.
+ */
+public interface TransferService {
 
-public class TransferService {
-    private final BankAccountService bankService;
-    private final TransactionsLog transactionsLog;
+    void makeDraft(long bankAccIdFrom, long bankAccIdTo, double summ);
 
-    @Inject
-    public TransferService(BankAccountService bankService, TransactionsLog transactionsLog) {
-        this.bankService = bankService;
-        this.transactionsLog = transactionsLog;
-    }
-
-    public void makeDraft(){}
-
-    public void makeDraftWithExchange(){}
+    void makeDraftWithExchange(long bankAccIdFrom, long bankAccIdTo,
+                               String currTypeFrom, String currTypeTo,
+                               double summ);
 }

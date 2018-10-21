@@ -8,7 +8,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public enum OperationType {
     RECEIPT("ПОЛУЧЕНИЕ", 0L),
-    EXPENSE("РАСХОД", 1L),
+    EXPENSE("СПИСАНИЕ", 1L),
     TRANSFER("ПЕРЕВОД", 2L),
     TRANSFER_WITH_EXCHANGE("ПЕРЕВОД С ОБМЕНОМ", 3L);
 

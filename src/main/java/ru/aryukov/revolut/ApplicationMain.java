@@ -1,15 +1,11 @@
 package ru.aryukov.revolut;
 
 
-import com.google.inject.Inject;
 import org.apache.log4j.Logger;
 import org.h2.tools.Server;
 import ru.aryukov.revolut.config.Configuration;
 import ru.aryukov.revolut.utils.SparkUtils;
 
-import javax.jnlp.PersistenceService;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import java.sql.SQLException;
 
 import static spark.Spark.get;
@@ -21,6 +17,9 @@ public class ApplicationMain {
         Server server = Server.createTcpServer("-tcpPort" ,"9092", "-tcpAllowOthers").start();
         //
         Configuration.initialize();
+        //port(8800);
+
+        //Injector injector = Guice.createInjector(new UserController());
 
         Logger logger = Logger.getLogger(ApplicationMain.class);
         SparkUtils.createServerWithRequestLog(logger);

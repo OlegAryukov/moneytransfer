@@ -1,0 +1,2 @@
+INSERT INTO dbtest.user VALUES(1, 'Bob', 'Jhonse'),(2, 'Alice', 'Pauling'),(3, 'Djeff', 'Mitchel');
+INSERT INTO dbtest.bank_account VALUES(10, 100.10, 'USD', 1),(20, 200.20, 'EUR', 2),(30, 300.30, 'RUR', 3);

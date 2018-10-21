@@ -1,18 +1,23 @@
 package ru.aryukov.revolut.service.impl;
 
 import com.google.inject.Inject;
+import ru.aryukov.revolut.dao.UserDao;
+import ru.aryukov.revolut.dto.UserDto;
 import ru.aryukov.revolut.model.User;
 import ru.aryukov.revolut.service.UserService;
+import ru.aryukov.revolut.utils.MapperUtils;
 
-import javax.persistence.EntityManager;
+import java.util.Optional;
 
 public class UserServiceImpl implements UserService {
 
     @Inject
-    EntityManager entityManager;
+    private UserDao userDao;
 
     @Override
-    public User getUserById(Long userId) {
-        return entityManager.find(User.class, userId);
+    public Optional<UserDto> getUserById(Long userId) {
+        return Optional.of(userDao.findByID(User.class, userId)).map(MapperUtils::mapUser);
     }
+
+    
 }
