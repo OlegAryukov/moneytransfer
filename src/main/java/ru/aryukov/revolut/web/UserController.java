@@ -3,7 +3,7 @@ package ru.aryukov.revolut.web;
 import com.google.gson.Gson;
 import com.google.inject.Inject;
 import ru.aryukov.revolut.dto.ResponseEntity;
-import ru.aryukov.revolut.dto.UserPost;
+import ru.aryukov.revolut.dto.post.UserPost;
 import ru.aryukov.revolut.service.UserService;
 import ru.aryukov.revolut.utils.JsonTransformer;
 import spark.Spark;

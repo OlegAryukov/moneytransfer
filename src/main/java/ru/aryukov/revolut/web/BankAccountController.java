@@ -2,9 +2,9 @@ package ru.aryukov.revolut.web;
 
 import com.google.gson.Gson;
 import com.google.inject.Inject;
-import ru.aryukov.revolut.dto.BankAccPost;
+import ru.aryukov.revolut.dto.post.BankAccPost;
 import ru.aryukov.revolut.dto.ResponseEntity;
-import ru.aryukov.revolut.dto.TransferPost;
+import ru.aryukov.revolut.dto.post.TransferPost;
 import ru.aryukov.revolut.service.BankAccountService;
 import spark.Spark;
 

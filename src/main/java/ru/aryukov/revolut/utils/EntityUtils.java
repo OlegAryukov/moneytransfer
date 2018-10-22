@@ -3,11 +3,9 @@ package ru.aryukov.revolut.utils;
 
 import com.google.inject.Inject;
 import ru.aryukov.revolut.dao.UserDao;
-import ru.aryukov.revolut.dto.BankAccPost;
-import ru.aryukov.revolut.dto.BankAccPut;
-import ru.aryukov.revolut.dto.UserPost;
+import ru.aryukov.revolut.dto.post.BankAccPut;
+import ru.aryukov.revolut.dto.post.UserPost;
 import ru.aryukov.revolut.model.BankAccount;
-import ru.aryukov.revolut.model.CurrencyType;
 import ru.aryukov.revolut.model.User;
 
 import java.util.Optional;

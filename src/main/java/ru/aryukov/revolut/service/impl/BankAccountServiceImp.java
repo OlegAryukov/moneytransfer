@@ -1,25 +1,26 @@
 package ru.aryukov.revolut.service.impl;
 
 import com.google.inject.Inject;
-import com.google.inject.persist.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import ru.aryukov.revolut.dao.BankAccountDao;
+import ru.aryukov.revolut.dao.HistoryOperationDao;
 import ru.aryukov.revolut.dao.UserDao;
-import ru.aryukov.revolut.dto.BankAccPost;
-import ru.aryukov.revolut.dto.BankAccPut;
-import ru.aryukov.revolut.dto.BankAccountDto;
-import ru.aryukov.revolut.dto.NotFoundResponse;
 import ru.aryukov.revolut.dto.ResponseEntity;
-import ru.aryukov.revolut.dto.TransferPost;
-import ru.aryukov.revolut.dto.TransferResultResponse;
+import ru.aryukov.revolut.dto.post.BankAccPost;
+import ru.aryukov.revolut.dto.post.TransactionPost;
+import ru.aryukov.revolut.dto.post.TransferPost;
+import ru.aryukov.revolut.dto.post.TransferPostWithExchange;
+import ru.aryukov.revolut.dto.response.NotFoundResponse;
+import ru.aryukov.revolut.dto.response.TransferResultResponse;
 import ru.aryukov.revolut.model.BankAccount;
+import ru.aryukov.revolut.model.OperationHistory;
+import ru.aryukov.revolut.model.OperationType;
 import ru.aryukov.revolut.model.User;
 import ru.aryukov.revolut.service.BankAccountService;
-import ru.aryukov.revolut.utils.EntityUtils;
 import ru.aryukov.revolut.utils.MapperUtils;
 
 import java.math.BigDecimal;
-import java.util.Optional;
+import java.time.Instant;
 
 @Slf4j
 public class BankAccountServiceImp implements BankAccountService {
@@ -29,7 +30,7 @@ public class BankAccountServiceImp implements BankAccountService {
     @Inject
     private UserDao userDao;
     @Inject
-    private EntityUtils entityUtils;
+    private HistoryOperationDao historyOperationDao;
 
     public ResponseEntity getBankAccount(long bankAccId) {
         log.debug("Looking for Bank Account with id:{}", bankAccId);
@@ -70,6 +71,22 @@ public class BankAccountServiceImp implements BankAccountService {
                 accSource.setAmount(newSourceAmount);
                 accDest.setAmount(newDestAmount);
                 bankAccountDao.transfer(accSource, accDest);
+
+                TransactionPost trParams = TransactionPost.builder()
+                        .bankAccountSource(params.getBankAccIdSource())
+                        .userFrom(accSource.getUser().getId())
+                        .currSourceType(accSource.getCurrency())
+                        .sum(params.getSum())
+                        .bankAccountDest(params.getBankAccIdSource())
+                        .userTo(accDest.getUser().getId())
+                        .currDestType(accDest.getCurrency())
+                        .operationType(OperationType.TRANSFER)
+                        .operationTime(Instant.now())
+                        .build();
+
+                OperationHistory transferRecord = new OperationHistory(trParams);
+                historyOperationDao.create(transferRecord);
+
                 return TransferResultResponse.builder()
                         .message("Transfer SUCCESS")
                         .build();
@@ -80,27 +97,54 @@ public class BankAccountServiceImp implements BankAccountService {
             }
         } else {
             return TransferResultResponse.builder()
-                    .message("Not found on of accounts")
+                    .message("Not found one of account")
                     .build();
         }
     }
 
-    @Override
-    public Optional<BankAccountDto> updateBankAccount(long bankAccId, BankAccPut params) {
-        return null;
-    }
+    public ResponseEntity transferWithExchange(TransferPostWithExchange params){
+        log.debug("Try handle transfer with exchange between bank account id:" + params.getBankAccIdSource()
+                + " to bank account with id:" + params.getBankAccIdSource() + " transfer sum is " + params.getSum());
 
-    @Transactional
-    @Override
-    public boolean getMoney(Long bankAccountId, double sum) {
-        boolean operationFlag = true;
-        return operationFlag;
-    }
+        BankAccount accSource = bankAccountDao.findByID(BankAccount.class, params.getBankAccIdSource());
+        BankAccount accDest = bankAccountDao.findByID(BankAccount.class, params.getBankAccIdDest());
+        BigDecimal sumAfterConvert = params.getSum().multiply(params.getExchangeCourse());
+        if (accDest != null && accSource != null) {
+            if (checkPossable(accSource.getAmount(), sumAfterConvert)) {
+                BigDecimal newSourceAmount = accSource.getAmount().subtract(sumAfterConvert);
+                BigDecimal newDestAmount = accDest.getAmount().add(sumAfterConvert);
+                accSource.setAmount(newSourceAmount);
+                accDest.setAmount(newDestAmount);
+                bankAccountDao.transfer(accSource, accDest);
 
-    @Transactional
-    @Override
-    public boolean putMoney(Long bankAccountId, double sum) {
-        return false;
+                TransactionPost trParams = TransactionPost.builder()
+                        .bankAccountSource(params.getBankAccIdSource())
+                        .userFrom(accSource.getUser().getId())
+                        .currSourceType(accSource.getCurrency())
+                        .sum(sumAfterConvert)
+                        .bankAccountDest(params.getBankAccIdSource())
+                        .userTo(accDest.getUser().getId())
+                        .currDestType(accDest.getCurrency())
+                        .operationType(OperationType.TRANSFER_WITH_EXCHANGE)
+                        .operationTime(Instant.now())
+                        .build();
+
+                OperationHistory transferRecord = new OperationHistory(trParams);
+                historyOperationDao.create(transferRecord);
+
+                return TransferResultResponse.builder()
+                        .message("Transfer SUCCESS")
+                        .build();
+            } else {
+                return TransferResultResponse.builder()
+                        .message("Transfer NOT SUCCESS on account " + params.getBankAccIdSource() + " not enough money")
+                        .build();
+            }
+        } else {
+            return TransferResultResponse.builder()
+                    .message("Not found one of account")
+                    .build();
+        }
     }
 
     private boolean checkPossable(BigDecimal accSum, BigDecimal existSum) {

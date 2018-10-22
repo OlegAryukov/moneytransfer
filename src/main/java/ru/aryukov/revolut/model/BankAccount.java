@@ -3,7 +3,7 @@ package ru.aryukov.revolut.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.aryukov.revolut.dto.BankAccPost;
+import ru.aryukov.revolut.dto.post.BankAccPost;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

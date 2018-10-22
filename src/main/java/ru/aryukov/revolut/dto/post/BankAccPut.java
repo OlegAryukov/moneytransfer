@@ -1,17 +1,21 @@
-package ru.aryukov.revolut.dto;
+package ru.aryukov.revolut.dto.post;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
-import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
+/**
+ * Объект обновления счета
+ */
 @Data
 @Builder
 @AllArgsConstructor
 public class BankAccPut {
 
-    @NotNull
+    /**
+     * Новове состояние счета
+     */
     BigDecimal amount;
 }

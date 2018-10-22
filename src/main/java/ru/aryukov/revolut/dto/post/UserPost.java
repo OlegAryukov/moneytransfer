@@ -1,18 +1,25 @@
-package ru.aryukov.revolut.dto;
+package ru.aryukov.revolut.dto.post;
 
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
+/**
+ * Объект создания пользователя.
+ */
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
 public class UserPost {
 
+    /**
+     * Имя
+     */
     private String name;
 
+    /**
+     * Фамилия
+     */
     private String secondName;
 }

@@ -1,7 +1,7 @@
 package ru.aryukov.revolut.service;
 
 import ru.aryukov.revolut.dto.ResponseEntity;
-import ru.aryukov.revolut.dto.UserPost;
+import ru.aryukov.revolut.dto.post.UserPost;
 
 public interface UserService {
 

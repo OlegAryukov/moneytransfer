@@ -21,8 +21,12 @@ CREATE TABLE dbtest.operation_history;
 ALTER TABLE dbtest.operation_history ADD operation_history_id UUID NOT NULL ;
 ALTER TABLE dbtest.operation_history ADD operation_type VARCHAR2(10);
 ALTER TABLE dbtest.operation_history ADD user_id_from INTEGER;
+ALTER TABLE dbtest.operation_history ADD curr_type_from VARCHAR2(3);
 ALTER TABLE dbtest.operation_history ADD bank_account_id_from INTEGER;
+ALTER TABLE dbtest.operation_history ADD summ DECIMAL(10, 2);
+ALTER TABLE dbtest.operation_history ADD cross_course DECIMAL(10, 2);
 ALTER TABLE dbtest.operation_history ADD user_id_to INTEGER;
+ALTER TABLE dbtest.operation_history ADD curr_type_to VARCHAR2(3);
 ALTER TABLE dbtest.operation_history ADD bank_account_id_to INTEGER;
 ALTER TABLE dbtest.operation_history ADD operation_date_utc TIMESTAMP;
 
