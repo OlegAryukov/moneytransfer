@@ -1,11 +1,9 @@
 package ru.aryukov.revolut.service;
 
-import ru.aryukov.revolut.dto.UserDto;
-
-import java.util.Optional;
+import ru.aryukov.revolut.model.User;
 
 public interface UserService {
 
-    Optional<UserDto> getUserById(Long userId);
+    User getUserById(Long userId);
 
 }

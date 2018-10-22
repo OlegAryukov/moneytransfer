@@ -33,6 +33,6 @@ public class UserDto {
     /**
      * Список банковских счетов
      */
-    List<@NotNull BankAccount> bankAccounts;
+    List<@NotNull BankAccountDto> bankAccounts;
 
 }

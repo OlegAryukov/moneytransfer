@@ -5,6 +5,8 @@ import ru.aryukov.revolut.dto.UserDto;
 import ru.aryukov.revolut.model.BankAccount;
 import ru.aryukov.revolut.model.User;
 
+import java.util.stream.Collectors;
+
 public class MapperUtils {
 
     public MapperUtils() {
@@ -15,7 +17,11 @@ public class MapperUtils {
                 .id(user.getId())
                 .name(user.getName())
                 .secondName(user.getSecondName())
-                .bankAccounts(user.getBankAccounts())
+                .bankAccounts(user.getBankAccounts().stream()
+                        .map(bankAccount -> BankAccountDto.builder()
+                                .amount(bankAccount.getAmount())
+                                .currencyType(bankAccount.getCurrency().getWorldCode())
+                                .build()).collect(Collectors.toList()))
                 .build();
     }
 
