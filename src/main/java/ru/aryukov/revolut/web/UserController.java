@@ -1,11 +1,11 @@
 package ru.aryukov.revolut.web;
 
+import com.google.gson.Gson;
 import com.google.inject.Inject;
-import ru.aryukov.revolut.dto.NotFoundEntity;
-import ru.aryukov.revolut.model.User;
+import ru.aryukov.revolut.dto.ResponseEntity;
+import ru.aryukov.revolut.dto.UserPost;
 import ru.aryukov.revolut.service.UserService;
 import ru.aryukov.revolut.utils.JsonTransformer;
-import ru.aryukov.revolut.utils.MapperUtils;
 import spark.Spark;
 
 public class UserController {
@@ -14,16 +14,16 @@ public class UserController {
 
     public UserController() {
 
-        Spark.get("/user/:id", "application/json",  (request, response) -> {
+        Spark.get("/user/:id", "application/json", (request, response) -> {
             Long userId = Long.valueOf(request.params("id"));
-            User entity = userService.getUserById(userId);
-            if(entity != null){
-                return MapperUtils.mapUser(entity);
-            } else {
-                return NotFoundEntity.builder()
-                    .message("Not found user with id: " + userId)
-                    .build();
-            }
+            return userService.getUserById(userId);
         }, new JsonTransformer());
+
+        Spark.post("/user", (request, response) -> {
+            response.type("application/json");
+            UserPost userPost = new Gson().fromJson(request.body(), UserPost.class);
+            ResponseEntity resp = userService.createUser(userPost);
+            return new Gson().toJson(resp);
+        });
     }
 }

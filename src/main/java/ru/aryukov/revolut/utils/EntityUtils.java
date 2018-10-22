@@ -17,6 +17,9 @@ public class EntityUtils {
     @Inject
     private UserDao userDao;
 
+    public EntityUtils() {
+    }
+
     public User createUser(UserPost user){
         User entity = new User();
         entity.setName(user.getName());
@@ -28,15 +31,6 @@ public class EntityUtils {
         entity.setName(params.getName());
         entity.setSecondName(params.getSecondName());
         return entity;
-    }
-
-    public BankAccount createBankAcc(BankAccPost bankAccPost, long userId){
-        Optional<User> userEntity = Optional.of(userDao.findByID(User.class, userId));
-        BankAccount accountEntity = new BankAccount();
-        setUserIfExist(userEntity, accountEntity);
-        accountEntity.setAmount(bankAccPost.getAmount());
-        accountEntity.setCurrency(CurrencyType.fromValue(bankAccPost.getCurrType()));
-        return accountEntity;
     }
 
     public BankAccount mergeBankAcc(BankAccount entity, BankAccPut params){

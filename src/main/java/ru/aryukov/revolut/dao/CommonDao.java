@@ -5,9 +5,9 @@ import java.util.List;
 
 public interface  CommonDao<T, ID extends Serializable> {
 
-        public void create(T entity);
+        public T create(T entity);
 
-        public void update(T entity);
+        public T update(T entity);
 
         public void delete(T entity);
 

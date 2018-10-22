@@ -1,9 +1,12 @@
 package ru.aryukov.revolut.service;
 
-import ru.aryukov.revolut.model.User;
+import ru.aryukov.revolut.dto.ResponseEntity;
+import ru.aryukov.revolut.dto.UserPost;
 
 public interface UserService {
 
-    User getUserById(Long userId);
+    ResponseEntity getUserById(Long userId);
+
+    ResponseEntity createUser(UserPost params);
 
 }

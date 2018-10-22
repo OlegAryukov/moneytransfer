@@ -16,7 +16,7 @@ import java.math.BigDecimal;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class BankAccountDto {
+public class BankAccountDto implements ResponseEntity{
 
     /**
      * Идентификатор счета

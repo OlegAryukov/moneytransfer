@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class NotFoundEntity implements ResponseEntity {
+public class NotFoundResponse implements ResponseEntity {
 
     String message;
 }

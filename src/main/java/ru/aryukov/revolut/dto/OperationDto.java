@@ -12,7 +12,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class OperationDto {
+public class OperationDto implements ResponseEntity{
 
     /**
      * Идентфикатор траназакции

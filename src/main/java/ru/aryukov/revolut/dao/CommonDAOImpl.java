@@ -1,6 +1,7 @@
 package ru.aryukov.revolut.dao;
 
 import com.google.inject.Inject;
+import com.google.inject.persist.Transactional;
 
 import javax.persistence.EntityManager;
 import java.io.Serializable;
@@ -9,15 +10,24 @@ import java.util.List;
 public abstract class CommonDAOImpl<T, ID extends Serializable> implements CommonDao<T,ID> {
 
 	@Inject
-    private EntityManager em;
+    protected EntityManager em;
 
 
-    public void create(T entity) {
+    public T create(T entity) {
+        em.getTransaction().begin();
         em.persist(entity);
+        em.flush();
+        em.getTransaction().commit();
+        em.clear();
+        return entity;
     }
 
-    public void update(T entity) {
+    public T update(T entity) {
+        em.getTransaction().begin();
         em.merge(entity);
+        em.getTransaction().commit();
+        em.clear();
+        return entity;
     }
 
     public void delete(T entity) {
