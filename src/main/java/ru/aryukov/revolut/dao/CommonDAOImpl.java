@@ -18,7 +18,6 @@ public abstract class CommonDAOImpl<T, ID extends Serializable> implements Commo
         em.persist(entity);
         em.flush();
         em.getTransaction().commit();
-        em.clear();
         return entity;
     }
 
@@ -26,7 +25,7 @@ public abstract class CommonDAOImpl<T, ID extends Serializable> implements Commo
         em.getTransaction().begin();
         em.merge(entity);
         em.getTransaction().commit();
-        em.clear();
+        em.detach(entity);
         return entity;
     }
 

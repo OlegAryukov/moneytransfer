@@ -10,7 +10,7 @@ public class BankAccountDaoImpl extends CommonDAOImpl<BankAccount, Long> impleme
 
     @Override
     public BankAccount update(BankAccount entity) {
-        em.lock(entity, LockModeType.PESSIMISTIC_FORCE_INCREMENT);
+        em.lock(entity, LockModeType.OPTIMISTIC_FORCE_INCREMENT);
         em.getTransaction().begin();
         em.persist(entity);
         em.getTransaction().commit();
@@ -19,13 +19,12 @@ public class BankAccountDaoImpl extends CommonDAOImpl<BankAccount, Long> impleme
 
     public void transfer(BankAccount source, BankAccount dest){
         em.getTransaction().begin();
-        em.lock(source, LockModeType.PESSIMISTIC_FORCE_INCREMENT);
-        em.lock(dest, LockModeType.PESSIMISTIC_FORCE_INCREMENT);
+        em.lock(source, LockModeType.OPTIMISTIC_FORCE_INCREMENT);
+        em.lock(dest, LockModeType.OPTIMISTIC_FORCE_INCREMENT);
         em.persist(source);
         em.persist(dest);
         em.flush();
         em.getTransaction().commit();
-        em.clear();
     }
 
     @Override
