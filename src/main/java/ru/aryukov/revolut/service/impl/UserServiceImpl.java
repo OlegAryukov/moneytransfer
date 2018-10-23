@@ -10,6 +10,8 @@ import ru.aryukov.revolut.service.UserService;
 import ru.aryukov.revolut.utils.EntityUtils;
 import ru.aryukov.revolut.utils.MapperUtils;
 
+import java.util.List;
+
 public class UserServiceImpl implements UserService {
 
     @Inject
@@ -34,5 +36,8 @@ public class UserServiceImpl implements UserService {
         return MapperUtils.mapUser(user);
     }
 
-
+    @Override
+    public List<User> getAllUsers() {
+        return userDao.findAll(User.class);
+    }
 }

@@ -4,8 +4,8 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.junit.Test;
 import ru.aryukov.revolut.dto.BankAccountDto;
-import ru.aryukov.revolut.dto.ResponseEntity;
 import ru.aryukov.revolut.dto.post.TransferPost;
+import ru.aryukov.revolut.dto.post.TransferPostWithExchange;
 import ru.aryukov.revolut.dto.response.TransferResultResponse;
 import ru.aryukov.revolut.modules.BaseModule;
 import ru.aryukov.revolut.service.BankAccountService;
@@ -31,9 +31,19 @@ public class BankAccountServiceTest {
     @Test
     public void transferTest(){
         //Создаем у пользователя с USD счетом еще один счет USD
-        bankAccountService.createAccount(TestDataUtils.getBankAccPost());
+        BankAccountDto bankAccountDto = (BankAccountDto)bankAccountService.createAccount(TestDataUtils.getBankAccPost());
+        TransferPost tp = TestDataUtils.getTransferPost();
+        tp.setBankAccIdDest(tp.getBankAccIdDest());
         //Делаем трансфер между счетами с одинаковой валютой
-        TransferResultResponse responseEntity = (TransferResultResponse) bankAccountService.transfer(TestDataUtils.getTransferPost());
+        TransferResultResponse responseEntity = (TransferResultResponse) bankAccountService.transfer(tp);
+        assertThat(responseEntity.getMessage(), is("Transfer SUCCESS"));
+    }
+
+    @Test
+    public void transferWithExchangeTest(){
+        TransferPostWithExchange tp = TestDataUtils.getTransferPostWithExchange();
+        //Делаем трансфер между счетами с разной валютой
+        TransferResultResponse responseEntity = (TransferResultResponse) bankAccountService.transferWithExchange(tp);
         assertThat(responseEntity.getMessage(), is("Transfer SUCCESS"));
     }
 

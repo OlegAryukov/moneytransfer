@@ -14,8 +14,11 @@ public class HistoryController extends AbstractController {
     TransactionsLog transactionsLog;
 
     public HistoryController() {
-        Spark.get("/history", "application/json", (request, response) -> transactionsLog.getHistory()
-                .stream().map(operationHistory -> MapperUtils.mapOperationDto(operationHistory))
-                .collect(Collectors.toList()), new JsonTransformer());
+        Spark.get("/history", (request, response) -> {
+            response.type("application/json");
+            return transactionsLog.getHistory()
+                    .stream().map(operationHistory -> MapperUtils.mapOperationDto(operationHistory))
+                    .collect(Collectors.toList());
+        }, new JsonTransformer());
     }
 }
