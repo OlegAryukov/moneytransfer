@@ -17,9 +17,6 @@ public class ApplicationMain {
         Server server = Server.createTcpServer("-tcpPort" ,"9092", "-tcpAllowOthers").start();
         //
         Configuration.initialize();
-        //port(8800);
-
-        //Injector injector = Guice.createInjector(new UserController());
 
         Logger logger = Logger.getLogger(ApplicationMain.class);
         SparkUtils.createServerWithRequestLog(logger);
