@@ -35,7 +35,7 @@ public class BankAccount {
      * Идентификатор счета
      */
     @Id
-    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "sequence-generator")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequence-generator")
     @SequenceGenerator(name = "sequence-generator", sequenceName = "BANK_ACC_ID_SEQ", allocationSize = 1)
     @Column(name = "bank_account_id")
     private Long id;

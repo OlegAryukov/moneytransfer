@@ -19,7 +19,7 @@ ALTER TABLE dbtest.bank_account ADD CONSTRAINT fk_bc_user FOREIGN KEY (user_user
 DROP TABLE IF EXISTS dbtest.operation_history;
 CREATE TABLE dbtest.operation_history;
 ALTER TABLE dbtest.operation_history ADD operation_history_id UUID NOT NULL ;
-ALTER TABLE dbtest.operation_history ADD operation_type VARCHAR2(10);
+ALTER TABLE dbtest.operation_history ADD operation_type VARCHAR2(25);
 ALTER TABLE dbtest.operation_history ADD user_id_from INTEGER;
 ALTER TABLE dbtest.operation_history ADD curr_type_from VARCHAR2(3);
 ALTER TABLE dbtest.operation_history ADD bank_account_id_from INTEGER;

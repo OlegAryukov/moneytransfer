@@ -4,7 +4,6 @@ import ru.aryukov.revolut.dao.CommonDAOImpl;
 import ru.aryukov.revolut.dao.UserDao;
 import ru.aryukov.revolut.model.User;
 
-
-public class UserDaoImpl extends CommonDAOImpl<User, Long> implements UserDao{
+public class UserDaoImpl extends CommonDAOImpl<User, Long> implements UserDao {
 
 }

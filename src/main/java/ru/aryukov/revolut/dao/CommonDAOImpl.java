@@ -1,17 +1,15 @@
 package ru.aryukov.revolut.dao;
 
 import com.google.inject.Inject;
-import com.google.inject.persist.Transactional;
 
 import javax.persistence.EntityManager;
 import java.io.Serializable;
 import java.util.List;
 
-public abstract class CommonDAOImpl<T, ID extends Serializable> implements CommonDao<T,ID> {
+public abstract class CommonDAOImpl<T, ID extends Serializable> implements CommonDao<T, ID> {
 
-	@Inject
+    @Inject
     protected EntityManager em;
-
 
     public T create(T entity) {
         em.getTransaction().begin();
@@ -35,12 +33,12 @@ public abstract class CommonDAOImpl<T, ID extends Serializable> implements Commo
 
 
     public T findByID(Class clazz, long id) {
-        T o =  (T) em.find(clazz, id);
+        T o = (T) em.find(clazz, id);
         return o;
     }
 
-    public List findAll(Class clazz) {
-        List<T>  list = em.createQuery(" from "+ clazz.getName() , clazz).getResultList();
+    public List<T> findAll(Class clazz) {
+        List<T> list = em.createQuery(" from " + clazz.getName(), clazz).getResultList();
         return list;
     }
 }

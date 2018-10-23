@@ -12,7 +12,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class OperationDto implements ResponseEntity{
+public class OperationDto implements ResponseEntity {
 
     /**
      * Идентфикатор траназакции
@@ -35,7 +35,17 @@ public class OperationDto implements ResponseEntity{
     private Long bankAccountFrom;
 
     /**
-     * Идентфикатор пользоватлея, от которого пришли средства
+     *
+     */
+    private String currTypeFrom;
+
+    /**
+     *
+     */
+    private String sum;
+
+    /**
+     * Идентфикатор пользователя, от которого пришли средства
      */
     private Long userTo;
 
@@ -43,6 +53,10 @@ public class OperationDto implements ResponseEntity{
      * Идентификатор банковского счета, с которого пришли средства
      */
     private Long bankAccountTo;
+
+    private String currTypeTo;
+
+    private String crossCourse;
 
     /**
      * Время совершения транзакции

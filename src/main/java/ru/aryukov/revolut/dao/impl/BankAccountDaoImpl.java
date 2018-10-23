@@ -6,21 +6,21 @@ import ru.aryukov.revolut.model.BankAccount;
 
 import javax.persistence.LockModeType;
 
-public class BankAccountDaoImpl extends CommonDAOImpl<BankAccount, Long> implements BankAccountDao{
+public class BankAccountDaoImpl extends CommonDAOImpl<BankAccount, Long> implements BankAccountDao {
 
     @Override
     public BankAccount update(BankAccount entity) {
-        em.lock(entity, LockModeType.OPTIMISTIC_FORCE_INCREMENT);
+        em.lock(entity, LockModeType.PESSIMISTIC_WRITE);
         em.getTransaction().begin();
         em.persist(entity);
         em.getTransaction().commit();
         return entity;
     }
 
-    public void transfer(BankAccount source, BankAccount dest){
+    public void transfer(BankAccount source, BankAccount dest) {
         em.getTransaction().begin();
-        em.lock(source, LockModeType.OPTIMISTIC_FORCE_INCREMENT);
-        em.lock(dest, LockModeType.OPTIMISTIC_FORCE_INCREMENT);
+        em.lock(source, LockModeType.PESSIMISTIC_WRITE);
+        em.lock(dest, LockModeType.PESSIMISTIC_WRITE);
         em.persist(source);
         em.persist(dest);
         em.flush();

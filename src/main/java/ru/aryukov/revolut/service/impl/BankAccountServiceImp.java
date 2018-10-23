@@ -3,7 +3,6 @@ package ru.aryukov.revolut.service.impl;
 import com.google.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import ru.aryukov.revolut.dao.BankAccountDao;
-import ru.aryukov.revolut.dao.HistoryOperationDao;
 import ru.aryukov.revolut.dao.UserDao;
 import ru.aryukov.revolut.dto.ResponseEntity;
 import ru.aryukov.revolut.dto.post.BankAccPost;
@@ -13,10 +12,10 @@ import ru.aryukov.revolut.dto.post.TransferPostWithExchange;
 import ru.aryukov.revolut.dto.response.NotFoundResponse;
 import ru.aryukov.revolut.dto.response.TransferResultResponse;
 import ru.aryukov.revolut.model.BankAccount;
-import ru.aryukov.revolut.model.OperationHistory;
 import ru.aryukov.revolut.model.OperationType;
 import ru.aryukov.revolut.model.User;
 import ru.aryukov.revolut.service.BankAccountService;
+import ru.aryukov.revolut.service.TransactionsLog;
 import ru.aryukov.revolut.utils.MapperUtils;
 
 import java.math.BigDecimal;
@@ -30,7 +29,7 @@ public class BankAccountServiceImp implements BankAccountService {
     @Inject
     private UserDao userDao;
     @Inject
-    private HistoryOperationDao historyOperationDao;
+    private TransactionsLog transactionLog;
 
     public ResponseEntity getBankAccount(long bankAccId) {
         log.debug("Looking for Bank Account with id:{}", bankAccId);
@@ -77,15 +76,14 @@ public class BankAccountServiceImp implements BankAccountService {
                         .userFrom(accSource.getUser().getId())
                         .currSourceType(accSource.getCurrency())
                         .sum(params.getSum())
-                        .bankAccountDest(params.getBankAccIdSource())
+                        .bankAccountDest(params.getBankAccIdDest())
                         .userTo(accDest.getUser().getId())
                         .currDestType(accDest.getCurrency())
                         .operationType(OperationType.TRANSFER)
                         .operationTime(Instant.now())
                         .build();
 
-                OperationHistory transferRecord = new OperationHistory(trParams);
-                historyOperationDao.create(transferRecord);
+                transactionLog.logTransaction(trParams);
 
                 return TransferResultResponse.builder()
                         .message("Transfer SUCCESS")
@@ -102,7 +100,7 @@ public class BankAccountServiceImp implements BankAccountService {
         }
     }
 
-    public ResponseEntity transferWithExchange(TransferPostWithExchange params){
+    public ResponseEntity transferWithExchange(TransferPostWithExchange params) {
         log.debug("Try handle transfer with exchange between bank account id:" + params.getBankAccIdSource()
                 + " to bank account with id:" + params.getBankAccIdSource() + " transfer sum is " + params.getSum());
 
@@ -122,15 +120,15 @@ public class BankAccountServiceImp implements BankAccountService {
                         .userFrom(accSource.getUser().getId())
                         .currSourceType(accSource.getCurrency())
                         .sum(sumAfterConvert)
-                        .bankAccountDest(params.getBankAccIdSource())
+                        .crossCourse(params.getExchangeCourse())
+                        .bankAccountDest(params.getBankAccIdDest())
                         .userTo(accDest.getUser().getId())
                         .currDestType(accDest.getCurrency())
                         .operationType(OperationType.TRANSFER_WITH_EXCHANGE)
                         .operationTime(Instant.now())
                         .build();
 
-                OperationHistory transferRecord = new OperationHistory(trParams);
-                historyOperationDao.create(transferRecord);
+                transactionLog.logTransactionWithExchenge(trParams);
 
                 return TransferResultResponse.builder()
                         .message("Transfer SUCCESS")
@@ -148,6 +146,6 @@ public class BankAccountServiceImp implements BankAccountService {
     }
 
     private boolean checkPossable(BigDecimal accSum, BigDecimal existSum) {
-        return accSum.compareTo(existSum) >= 0 ? true : false;
+        return accSum.compareTo(existSum) >= 0;
     }
 }
