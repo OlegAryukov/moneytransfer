@@ -23,7 +23,6 @@ public class TransactionPost {
     /**
      * Пользователь отправитель
      */
-    @NotNull
     private Long userFrom;
 
     /**

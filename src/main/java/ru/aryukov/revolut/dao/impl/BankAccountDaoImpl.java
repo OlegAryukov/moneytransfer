@@ -2,7 +2,6 @@ package ru.aryukov.revolut.dao.impl;
 
 import org.apache.log4j.Logger;
 import ru.aryukov.revolut.dao.BankAccountDao;
-import ru.aryukov.revolut.dao.CommonDAOImpl;
 import ru.aryukov.revolut.model.BankAccount;
 
 import javax.persistence.LockModeType;

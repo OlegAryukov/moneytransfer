@@ -1,6 +1,5 @@
 package ru.aryukov.revolut.dao.impl;
 
-import ru.aryukov.revolut.dao.CommonDAOImpl;
 import ru.aryukov.revolut.dao.HistoryOperationDao;
 import ru.aryukov.revolut.model.OperationHistory;
 

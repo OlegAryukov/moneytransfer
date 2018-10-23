@@ -1,8 +1,8 @@
-package ru.aryukov.revolut.dao;
+package ru.aryukov.revolut.dao.impl;
 
 import com.google.inject.Inject;
 import org.apache.log4j.Logger;
-import ru.aryukov.revolut.dao.impl.BankAccountDaoImpl;
+import ru.aryukov.revolut.dao.CommonDao;
 
 import javax.persistence.EntityManager;
 import java.io.Serializable;
@@ -22,7 +22,7 @@ public abstract class CommonDAOImpl<T, ID extends Serializable> implements Commo
             em.flush();
             em.getTransaction().commit();
             return entity;
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             if(em.getTransaction()!=null && em.getTransaction().isActive()){
                 em.getTransaction().rollback();
             }
