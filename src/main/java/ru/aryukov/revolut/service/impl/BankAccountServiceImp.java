@@ -1,9 +1,10 @@
 package ru.aryukov.revolut.service.impl;
 
 import com.google.inject.Inject;
-import lombok.extern.slf4j.Slf4j;
+import org.apache.log4j.Logger;
 import ru.aryukov.revolut.dao.BankAccountDao;
 import ru.aryukov.revolut.dao.UserDao;
+import ru.aryukov.revolut.dao.impl.BankAccountDaoImpl;
 import ru.aryukov.revolut.dto.ResponseEntity;
 import ru.aryukov.revolut.dto.post.BankAccPost;
 import ru.aryukov.revolut.dto.post.TransactionPost;
@@ -21,8 +22,9 @@ import ru.aryukov.revolut.utils.MapperUtils;
 import java.math.BigDecimal;
 import java.time.Instant;
 
-@Slf4j
 public class BankAccountServiceImp implements BankAccountService {
+
+    private static Logger logger = Logger.getLogger(BankAccountServiceImp.class);
 
     @Inject
     private BankAccountDao bankAccountDao;
@@ -32,7 +34,7 @@ public class BankAccountServiceImp implements BankAccountService {
     private TransactionsLog transactionLog;
 
     public ResponseEntity getBankAccount(long bankAccId) {
-        log.debug("Looking for Bank Account with id:{}", bankAccId);
+        logger.debug("Looking for Bank Account with id:" + bankAccId);
         BankAccount entity = bankAccountDao.findByID(BankAccount.class, bankAccId);
         if (entity != null) {
             return MapperUtils.mapBankAcc(entity);
@@ -45,7 +47,7 @@ public class BankAccountServiceImp implements BankAccountService {
 
     @Override
     public ResponseEntity createAccount(BankAccPost params) {
-        log.debug("Create bank account for user with id:" + params.getUserId());
+        logger.debug("Create bank account for user with id:" + params.getUserId());
         User user = userDao.findByID(User.class, params.getUserId());
         if (user != null) {
             BankAccount bankAccount = new BankAccount(params, user);
@@ -58,7 +60,7 @@ public class BankAccountServiceImp implements BankAccountService {
     }
 
     public ResponseEntity transfer(TransferPost params) {
-        log.debug("Try handle transfer between bank account id:" + params.getBankAccIdSource()
+        logger.debug("Try handle transfer between bank account id:" + params.getBankAccIdSource()
                 + " to bank account with id:" + params.getBankAccIdSource() + " transfer sum is " + params.getSum());
 
         BankAccount accSource = bankAccountDao.findByID(BankAccount.class, params.getBankAccIdSource());
@@ -101,7 +103,7 @@ public class BankAccountServiceImp implements BankAccountService {
     }
 
     public ResponseEntity transferWithExchange(TransferPostWithExchange params) {
-        log.debug("Try handle transfer with exchange between bank account id:" + params.getBankAccIdSource()
+        logger.debug("Try handle transfer with exchange between bank account id:" + params.getBankAccIdSource()
                 + " to bank account with id:" + params.getBankAccIdSource() + " transfer sum is " + params.getSum());
 
         BankAccount accSource = bankAccountDao.findByID(BankAccount.class, params.getBankAccIdSource());

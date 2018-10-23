@@ -7,6 +7,10 @@ import ru.aryukov.revolut.model.BankAccount;
 import ru.aryukov.revolut.model.OperationHistory;
 import ru.aryukov.revolut.model.User;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -48,7 +52,7 @@ public class MapperUtils {
                 .bankAccountTo(oh.getBankAccountTo())
                 .currTypeTo(oh.getCurrTypeTo().getWorldCode())
                 .operationType(oh.getOperationType().operationName)
-                .operationTime(oh.getOperationTime())
+                .operationTime(LocalDateTime.ofInstant(oh.getOperationTime(), ZoneOffset.UTC))
                 .build();
     }
 
