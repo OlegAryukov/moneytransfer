@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import ru.aryukov.revolut.dto.ResponseEntity;
 
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 /**
@@ -13,19 +14,22 @@ import java.math.BigDecimal;
 @Data
 @Builder
 @AllArgsConstructor
-public class TransferPost implements ResponseEntity {
-     /**
-      * Идентификатор счета списания
-      */
-     private Long bankAccIdSource;
+public class TransferPost implements ResponseEntity, Validable {
+    /**
+     * Идентификатор счета списания
+     */
+    @NotNull(message = "Id is necessary and positive")
+    private Long bankAccIdSource;
 
-     /**
-      * Идентификатор счета поступления.
-      */
-     private Long bankAccIdDest;
+    /**
+     * Идентификатор счета поступления.
+     */
+    @NotNull(message = "Id is necessary and positive")
+    private Long bankAccIdDest;
 
-     /**
-      * Сумма трансфера.
-      */
-     private BigDecimal sum;
+    /**
+     * Сумма трансфера.
+     */
+    @NotNull(message = "Sum of transfer must be not empty")
+    private BigDecimal sum;
 }

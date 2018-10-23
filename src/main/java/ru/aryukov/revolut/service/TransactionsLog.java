@@ -1,12 +1,16 @@
 package ru.aryukov.revolut.service;
 
-import ru.aryukov.revolut.dto.post.TransferPost;
-import ru.aryukov.revolut.dto.post.TransferPostWithExchange;
+import ru.aryukov.revolut.dto.post.TransactionPost;
+import ru.aryukov.revolut.model.OperationHistory;
+
+import java.util.List;
 
 public interface TransactionsLog {
 
-    void logTransaction(TransferPost params);
+    void logTransaction(TransactionPost params);
 
-    void logTransactionWithExchenge(TransferPostWithExchange params);
+    void logTransactionWithExchenge(TransactionPost params);
+
+    List<OperationHistory> getHistory();
 
 }

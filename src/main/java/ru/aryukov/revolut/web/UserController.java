@@ -8,7 +8,7 @@ import ru.aryukov.revolut.service.UserService;
 import ru.aryukov.revolut.utils.JsonTransformer;
 import spark.Spark;
 
-public class UserController {
+public class UserController extends AbstractController {
     @Inject
     private UserService userService;
 
@@ -22,6 +22,7 @@ public class UserController {
         Spark.post("/user", (request, response) -> {
             response.type("application/json");
             UserPost userPost = new Gson().fromJson(request.body(), UserPost.class);
+            validateIncome(userPost);
             ResponseEntity resp = userService.createUser(userPost);
             return new Gson().toJson(resp);
         });

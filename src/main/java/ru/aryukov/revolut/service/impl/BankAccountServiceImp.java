@@ -1,10 +1,10 @@
 package ru.aryukov.revolut.service.impl;
 
 import com.google.inject.Inject;
-import lombok.extern.slf4j.Slf4j;
+import org.apache.log4j.Logger;
 import ru.aryukov.revolut.dao.BankAccountDao;
-import ru.aryukov.revolut.dao.HistoryOperationDao;
 import ru.aryukov.revolut.dao.UserDao;
+import ru.aryukov.revolut.dao.impl.BankAccountDaoImpl;
 import ru.aryukov.revolut.dto.ResponseEntity;
 import ru.aryukov.revolut.dto.post.BankAccPost;
 import ru.aryukov.revolut.dto.post.TransactionPost;
@@ -13,27 +13,28 @@ import ru.aryukov.revolut.dto.post.TransferPostWithExchange;
 import ru.aryukov.revolut.dto.response.NotFoundResponse;
 import ru.aryukov.revolut.dto.response.TransferResultResponse;
 import ru.aryukov.revolut.model.BankAccount;
-import ru.aryukov.revolut.model.OperationHistory;
 import ru.aryukov.revolut.model.OperationType;
 import ru.aryukov.revolut.model.User;
 import ru.aryukov.revolut.service.BankAccountService;
+import ru.aryukov.revolut.service.TransactionsLog;
 import ru.aryukov.revolut.utils.MapperUtils;
 
 import java.math.BigDecimal;
 import java.time.Instant;
 
-@Slf4j
 public class BankAccountServiceImp implements BankAccountService {
+
+    private static Logger logger = Logger.getLogger(BankAccountServiceImp.class);
 
     @Inject
     private BankAccountDao bankAccountDao;
     @Inject
     private UserDao userDao;
     @Inject
-    private HistoryOperationDao historyOperationDao;
+    private TransactionsLog transactionLog;
 
     public ResponseEntity getBankAccount(long bankAccId) {
-        log.debug("Looking for Bank Account with id:{}", bankAccId);
+        logger.debug("Looking for Bank Account with id:" + bankAccId);
         BankAccount entity = bankAccountDao.findByID(BankAccount.class, bankAccId);
         if (entity != null) {
             return MapperUtils.mapBankAcc(entity);
@@ -46,7 +47,7 @@ public class BankAccountServiceImp implements BankAccountService {
 
     @Override
     public ResponseEntity createAccount(BankAccPost params) {
-        log.debug("Create bank account for user with id:" + params.getUserId());
+        logger.debug("Create bank account for user with id:" + params.getUserId());
         User user = userDao.findByID(User.class, params.getUserId());
         if (user != null) {
             BankAccount bankAccount = new BankAccount(params, user);
@@ -59,7 +60,7 @@ public class BankAccountServiceImp implements BankAccountService {
     }
 
     public ResponseEntity transfer(TransferPost params) {
-        log.debug("Try handle transfer between bank account id:" + params.getBankAccIdSource()
+        logger.debug("Try handle transfer between bank account id:" + params.getBankAccIdSource()
                 + " to bank account with id:" + params.getBankAccIdSource() + " transfer sum is " + params.getSum());
 
         BankAccount accSource = bankAccountDao.findByID(BankAccount.class, params.getBankAccIdSource());
@@ -77,15 +78,14 @@ public class BankAccountServiceImp implements BankAccountService {
                         .userFrom(accSource.getUser().getId())
                         .currSourceType(accSource.getCurrency())
                         .sum(params.getSum())
-                        .bankAccountDest(params.getBankAccIdSource())
+                        .bankAccountDest(params.getBankAccIdDest())
                         .userTo(accDest.getUser().getId())
                         .currDestType(accDest.getCurrency())
                         .operationType(OperationType.TRANSFER)
                         .operationTime(Instant.now())
                         .build();
 
-                OperationHistory transferRecord = new OperationHistory(trParams);
-                historyOperationDao.create(transferRecord);
+                transactionLog.logTransaction(trParams);
 
                 return TransferResultResponse.builder()
                         .message("Transfer SUCCESS")
@@ -102,8 +102,8 @@ public class BankAccountServiceImp implements BankAccountService {
         }
     }
 
-    public ResponseEntity transferWithExchange(TransferPostWithExchange params){
-        log.debug("Try handle transfer with exchange between bank account id:" + params.getBankAccIdSource()
+    public ResponseEntity transferWithExchange(TransferPostWithExchange params) {
+        logger.debug("Try handle transfer with exchange between bank account id:" + params.getBankAccIdSource()
                 + " to bank account with id:" + params.getBankAccIdSource() + " transfer sum is " + params.getSum());
 
         BankAccount accSource = bankAccountDao.findByID(BankAccount.class, params.getBankAccIdSource());
@@ -122,15 +122,15 @@ public class BankAccountServiceImp implements BankAccountService {
                         .userFrom(accSource.getUser().getId())
                         .currSourceType(accSource.getCurrency())
                         .sum(sumAfterConvert)
-                        .bankAccountDest(params.getBankAccIdSource())
+                        .crossCourse(params.getExchangeCourse())
+                        .bankAccountDest(params.getBankAccIdDest())
                         .userTo(accDest.getUser().getId())
                         .currDestType(accDest.getCurrency())
                         .operationType(OperationType.TRANSFER_WITH_EXCHANGE)
                         .operationTime(Instant.now())
                         .build();
 
-                OperationHistory transferRecord = new OperationHistory(trParams);
-                historyOperationDao.create(transferRecord);
+                transactionLog.logTransactionWithExchenge(trParams);
 
                 return TransferResultResponse.builder()
                         .message("Transfer SUCCESS")
@@ -148,6 +148,6 @@ public class BankAccountServiceImp implements BankAccountService {
     }
 
     private boolean checkPossable(BigDecimal accSum, BigDecimal existSum) {
-        return accSum.compareTo(existSum) >= 0 ? true : false;
+        return accSum.compareTo(existSum) >= 0;
     }
 }

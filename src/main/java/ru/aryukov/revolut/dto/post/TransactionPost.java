@@ -6,6 +6,7 @@ import lombok.Data;
 import ru.aryukov.revolut.model.CurrencyType;
 import ru.aryukov.revolut.model.OperationType;
 
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.Instant;
 
