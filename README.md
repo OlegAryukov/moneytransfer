@@ -17,6 +17,7 @@ API All calls to API must be started with http://localhost:4567/
 |--|--|--|--|
 |POST /user | Creates new User | Request param { "name":"Mike", "secondName":"Manson" } |	 |
 |POST /account| Creates new account for User|Request param { "currType":"USD", "amount":200.5, "userId":"3" }|
-| GET /account/{id} | Gets account by ID Path: id - account ID |	 |{ "id": 1, "amount": 100.1, "currencyType": "USD", "user": { "id": 1, "name": "Bob", "secondName": "Jhonse", "bankAccounts": [{ "amount": 100.1, "currencyType": "USD" }], } }|
+|GET /account/{id}| Gets account by ID Path: id - account ID |	 |{ "id": 1, "amount": 100.1, "currencyType": "USD", "user": { "id": 1, "name": "Bob", "secondName": "Jhonse", "bankAccounts": [{ "amount": 100.1, "currencyType": "USD" }], } }|
 |POST /account/transfer|Trnasfer money|{"bankAccIdSource":"1","bankAccIdDest":"2","sum":10}|{"message": "Transfer SUCCESS"}|
 |POST /account/transferex|Trnasfer money with exchange|{"bankAccIdSource":"1","bankAccIdDest":"2","sum":10, "exchangeCourse":1.25}|{"message": "Transfer SUCCESS"}|
+|GET /history|Get transfer history||
